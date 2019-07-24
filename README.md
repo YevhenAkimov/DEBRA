@@ -6,8 +6,16 @@ Yevhen Akimov
 DEBRA - DESeq-based Barcode Representation Analysis
 ===================================================
 
-Let's attach the DEBRA library, load example data set
------------------------------------------------------
+Install package
+---------------
+
+``` r
+library(devtools)
+install_github("YevhenAkimov/DEBRA")
+```
+
+Let's attach the DEBRA library and load example dataset
+-------------------------------------------------------
 
 ``` r
 library(DEBRA)
@@ -133,13 +141,15 @@ MAplot(drb)
 MAplot(drb,FDR=0.1)
 ```
 
-![](DEBRA_markdown_files/figure-markdown_github/plot-2.png) MA-plot for non-filtered data
+![](DEBRA_markdown_files/figure-markdown_github/plot-2.png)
+
+MA-plot for non-filtered data
 
 ``` r
 MAplot(drb, filtered =F)
 ```
 
-![](DEBRA_markdown_files/figure-markdown_github/unnamed-chunk-5-1.png)
+![](DEBRA_markdown_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
 Visualize independet filtering results
 
@@ -147,7 +157,7 @@ Visualize independet filtering results
 filterPlot(drb)
 ```
 
-![](DEBRA_markdown_files/figure-markdown_github/unnamed-chunk-6-1.png)
+![](DEBRA_markdown_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 **Visualized data related to beta threshold estimation**
 --------------------------------------------------------
@@ -158,12 +168,12 @@ Plot theoretical and empirical Kolmogorov-Smirnov (KS) statistic values
 KS_plot(drb)
 ```
 
-![](DEBRA_markdown_files/figure-markdown_github/unnamed-chunk-7-1.png)
+![](DEBRA_markdown_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
-Plotlocal overlap between Gamma-modelled empirical and theoretical Kolmogorov-Smirnov statistic values
+Plot local overlap between Gamma-modelled empirical and theoretical Kolmogorov-Smirnov statistic values
 
 ``` r
 overlapFit(drb)
 ```
 
-![](DEBRA_markdown_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](DEBRA_markdown_files/figure-markdown_github/unnamed-chunk-9-1.png)
