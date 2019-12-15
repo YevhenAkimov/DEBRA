@@ -921,7 +921,7 @@ DEBRA=function( counts ,
                      modified=modified)
 
 
-  if (drb@beta==-Inf) {
+  if (drb@beta==-Inf & drb@modified==T) {
     drb=estimateBeta(drb)
   }
 
