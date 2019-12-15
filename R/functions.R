@@ -329,21 +329,21 @@ setMethod(f="independentFilteringDRB",signature="DEBRADataSet",definition=functi
 #'
 #' @param drb DEBRADataSet object
 #' @param s an integer specifying number of replicates for local Kolmogorov-Smirnov statistic estimation. Default is 1000
-#' @param obs_window an integer specifying number of observations sampled from ordered mean counts values. Mean counts are calculated from condition samples
+#' @param obs_window an integer specifying number of observations sampled from ordered mean counts values. Mean counts are calculated from condition(test) samples
 #' @param max_window a numeric specifying maximum size of the sampling window in read counts max(sampled_counts)-min(sampled_counts) < max_window
 #' @param KS_test_window an integer specifying number of observations sampled from theoretical and empirical Kolmogorov-Smirnov statistics
 #' @param default_beta a numeric specifying beta value used if the estimation has failed
 #' @examples drb<-estimateBeta(drb)
 #' @export
-setGeneric("estimateBeta", valueClass = "DEBRADataSet", function( drb, s = 500, obs_window = 30, max_window = 150,
-                                                                  KS_test_window = 30, default_beta=10 ) {
+setGeneric("estimateBeta", valueClass = "DEBRADataSet", function( drb, s = 1000, obs_window = 60, max_window = 150,
+                                                                  KS_test_window = 50, default_beta=10 ) {
   standardGeneric("estimateBeta")
 })
 
 
 
-setMethod(f="estimateBeta",signature="DEBRADataSet", definition=function( drb, s = 500, obs_window = 30, max_window = 150,
-                                                                          KS_test_window = 30, default_beta=10 ) {
+setMethod(f="estimateBeta",signature="DEBRADataSet", definition=function( drb, s = 500, obs_window = 60, max_window = 150,
+                                                                          KS_test_window = 50, default_beta=10 ) {
 
   validObject(drb)
 
@@ -374,12 +374,12 @@ setMethod(f="estimateBeta",signature="DEBRADataSet", definition=function( drb, s
 
 estimateBetaFromDF=function( counts,
 
-                             sampling_size=30,
+                             sampling_size=60,
                              max_window=150,
                              min_count=1,
                              default_beta=default_beta,
-                             times=600,
-                             n_obs=30#  test sample size for overlap
+                             times=1000,
+                             n_obs=50#  test sample size for overlap
 ) {
 
 
