@@ -656,7 +656,12 @@ deseq2_LRT=function(counts,c_cols,disp_cols,modified,beta,fitted_only,shrunkLFC)
 
   }
 
-  res=DESeq2::results(dds, independentFiltering = F)
+  if(modified==F) {
+    res=DESeq2::results(dds)
+  } else {
+    res=DESeq2::results(dds, independentFiltering = F)
+  }
+  
 
   if (shrunkLFC) {res <- DESeq2::lfcShrink(dds, coef=2, res=res, type = "apeglm")}
 
@@ -777,7 +782,13 @@ DESeq2_Wald=function(counts,c_cols,disp_cols,modified,beta,fitted_only,shrunkLFC
 
 
   object <- DESeq2::nbinomWaldTest(object,modelMatrix = design)
-  res=DESeq2::results(object, independentFiltering = F)
+  
+  if(modified==F) {
+    res=DESeq2::results(object)
+  } else {
+    res=DESeq2::results(object, independentFiltering = F)
+  }
+  
 
   if (shrunkLFC) {res <- DESeq2::lfcShrink(object, coef=2, res=res, type = "apeglm")}
 
@@ -917,7 +928,14 @@ DEBRA=function( counts ,
   if (is.numeric(filter_FDR)) {drb@filter_FDR=filter_FDR}
 
   drb=testDRB(drb)
-  drb=independentFilteringDRB(drb,filter_FDR=drb@filter_FDR)
+  
+  if(drb@modified==T) {
+    drb=independentFilteringDRB(drb,filter_FDR=drb@filter_FDR)
+  } else {
+    drb@results_filtered=drb@results
+  }
+  
+    
 
   return(drb)
 
