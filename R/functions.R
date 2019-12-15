@@ -507,10 +507,10 @@ estimateBetaFromDF=function( counts,
   overlap_data=data.frame(mean=mean,overlap=overlap)
 
   fm <- try(drc::drm ( overlap ~ (mean) ,  fct = drc::LL.4()), silent = T)
-  if (class(fm)=="try-error") { print("Failed fitting with LL.4() sigmoid; trying G.3() (see drc::drm for details)  ")
+  if (class(fm)=="try-error") { print("Failed fitting with LL.4() sigmoid; trying G.3() (see drc::drm for details)")
     fm <- try(drc::drm ( overlap ~ (mean) ,  fct = drc::G.3()), silent = T)
     if (class(fm)=="try-error") {
-      print("Failed to fit mean-KS overlap with sigmoid; run overlapFit to assess the NB fit quality and manually set beta threshold. Setting beta to default_beta value. ")
+      print("Failed to fit mean-KS overlap with sigmoid; run KS_plot(drb) to assess the NB fit quality and manually set beta threshold. Setting beta to default_beta value. ")
       return(list(beta=default_beta,overlap_data=overlap_data,sigmoid_fit=list(),KS_stat=res))
     }
   }
