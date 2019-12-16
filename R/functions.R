@@ -862,7 +862,7 @@ pCountFilter=function(res,method,val.thr=0,FDR.thr=0.2) {
   }
 
 
-  theta=seq(0,1,0.01)
+  theta=seq(0,1,0.002)
 
   temp_pval=res[,pval]
   temp_pval[res[,"baseMean"]<val.thr]=NA
