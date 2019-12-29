@@ -843,7 +843,9 @@ base_meanV2= function(c_counts,disp_cols=colnames(c_counts),sf){
 
 
 
-
+#' Independent filtering with beta thresholding
+#'
+#' @export
 pCountFilter=function(res,method,val.thr=0,FDR.thr=0.2) {
   
   if (toupper(method)=="DESEQ2(WALD)") {
