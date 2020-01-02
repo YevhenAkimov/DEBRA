@@ -899,10 +899,11 @@ pCountFilter=function(res,method,val.thr=0,FDR.thr=0.2) {
 #' @param condition_names a character vector specifying the condition samples (colnames of the counts data frame)
 #' @param beta a numeric specifying beta value providing a lower read count threshold value for an independent filtering step; if beta = -Inf (default), the beta will be estimated from the read counts of condition samples
 #' @param method a character specifying the method used for inferring differentially represented barcodes
-#' @param trended a logical specifying if the trended dispersion estimates should be used; if trended=FALSE, the shrunken dispersion estimates (as estimated by DESeq2) are used
+#' @param trended a logical specifying if the trended dispersion estimates should be used; if trended=FALSE, the shrunken dispersion estimates (as estimated by DESeq2) are used, otherwise, the tagwise disperisons are estimated from the local dispersion trend as fitted with DESeq2
+#' @param filter_FDR user-specified FDR threshold for calculating number of null hypothesis rejections by independent filtering proceddure
 #' @param default_beta a numeric specifying the beta value used if the beta estimation is failed
 #' @param shrinkLFC a logical specifying if the logFC values should be shrunken using "apeglm" shrinkage estimator
-#' @param modified a logical, if modified = F then the non-modified version of the correspondig method (DESeq, DESeq2(Wald) or DESeq2(LRT)) will be run; note independent filtering using beta threshold can still be applied
+#' @param modified a logical, if modified = F then the non-modified version of the correspondig method (DESeq, DESeq2(Wald) or DESeq2(LRT)) will be run; note, results produced with independent filtering procedure (with no beta threshold) can still be extracted with resultsDRB function; trended parameter is ignored if modified==F
 #' @export
 DEBRA=function( counts ,
                 control_names  ,
