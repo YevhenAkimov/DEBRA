@@ -193,7 +193,7 @@ drb_2=DEBRADataSet( counts =  bar_counts,
               trended=T)
 ```
 
-Next, we estimate the beta threshold with default parameter.
+Next, we estimate the beta threshold with default parameters.
 
 ``` r
 drb_2= estimateBeta(drb_2)
