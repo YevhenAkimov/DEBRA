@@ -316,10 +316,10 @@ setMethod(f="independentFilteringDRB",signature="DEBRADataSet",definition=functi
     drb@beta=0}
   
   if (drb@modified==T) {
-    res=pCountFilter(drb@results,method=drb@method, val.thr=drb@beta,FDR.thr=filter_FDR)
+    res=pCountFilter(drb@results,method=drb@method, val.thr=drb@beta ,FDR.thr=drb@filter_FDR)
   } else
   {
-    res=pCountFilter(drb@results,method=drb@method, val.thr=0,FDR.thr=filter_FDR)
+    res=pCountFilter(drb@results,method=drb@method, val.thr=0, FDR.thr=drb@filter_FDR)
   }
   
   
