@@ -172,7 +172,7 @@ setMethod(f="overlapFit",signature="DEBRADataSet", definition=function(drb) {
   plot(drb@overlap_data$mean,
        drb@overlap_data$overlap,
        log="x",col="#343434",cex=0.6,lwd=0,pch=19,
-       xlab="Mean", ylab="KS statistics")
+       xlab="Mean", ylab="overlap")
   
   lines(drb@sigmoid_fit$mean_fit,
         drb@sigmoid_fit$overlap_fit,
