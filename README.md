@@ -183,7 +183,7 @@ overlapFit(drb)
 **Advanced DEBRA workflow**
 ---------------------------
 
-We start by creating the DEBRADataSet. In this example we will use shrunken dispersion estimates and DESeq2(LRT) test.
+We start by creating the DEBRADataSet. In this example we will use DESeq2(LRT) test.
 
 ``` r
 drb_2=DEBRADataSet( counts =  bar_counts,
