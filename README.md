@@ -6,8 +6,10 @@ Yevhen Akimov
 DEBRA - DESeq-based Barcode Representation Analysis
 ===================================================
 
-Install package
----------------
+DEBRA algorithm is developed for the identification of differentially represented clones (clones that differentially respond to the assay conditions) in clone tracing experiments. The clone tracing experiments are often associated with treatment-induced reduction in sample size which has been shown to affect the statistical properties of barcode read counts. Traditional algorithms (DESeq,DESeq2,edgeR) used for the inference of the differentially represented sequencing tags fail to account for these discrepancies and produce high number of false discoveries when the difference in size between control and condition samples is high. DEBRA utilizes the DESeq/DESeq2 functionality to reliably call differentially represented barcodes (DRBs) in clone tracing experiments.
+
+Start by installing the package
+-------------------------------
 
 ``` r
 library(devtools)
@@ -59,7 +61,7 @@ head(bar_counts)
 control_names = c("null_660.1","null_660.2","null_330.1","null_330.2" )
 condition_names = c("m_null_40.p35.1","m_null_40.p35.2")
 
-drb=DEBRA(bar_counts, control_names, condition_names, method="DESeq2(Wald)")
+drb=DEBRA(bar_counts, control_names=control_names, condition_names=condition_names, method="DESeq2(Wald)")
 ```
 
     ## [1] KS tests completed
@@ -90,12 +92,12 @@ head(results)
     ## ATTGTCGGCAGGAAGAAGCGTGGTGCCTGCCTTGGGAGGGT 0.1335535 -4.932731 8.108773e-07
     ## TCTTTTTCGCGAAAGTAGGGCGGTGAACACTTTCCAGAGGC 0.3018721 -4.954729 7.243127e-07
     ##                                                   padj
-    ## TGTGACACCTTATTCCGGGGAGGCAACATTCAAGGGGCGGA 9.127260e-06
-    ## CGTTACTCGGGGGATTCCGGGGGACATGCGTGAGGCGTGGA 8.083591e-05
-    ## TTGCACACGATATCGCAAGGAGGAATTTGTTGTTGGGAGGT 8.083591e-05
-    ## CCTGGGCTCGGCGTCTGAGATGGTAAGTGATTCCAGGTGGC 1.079293e-04
-    ## ATTGTCGGCAGGAAGAAGCGTGGTGCCTGCCTTGGGAGGGT 1.191990e-04
-    ## TCTTTTTCGCGAAAGTAGGGCGGTGAACACTTTCCAGAGGC 1.191990e-04
+    ## TGTGACACCTTATTCCGGGGAGGCAACATTCAAGGGGCGGA 8.992732e-06
+    ## CGTTACTCGGGGGATTCCGGGGGACATGCGTGAGGCGTGGA 7.964445e-05
+    ## TTGCACACGATATCGCAAGGAGGAATTTGTTGTTGGGAGGT 7.964445e-05
+    ## CCTGGGCTCGGCGTCTGAGATGGTAAGTGATTCCAGGTGGC 1.063385e-04
+    ## ATTGTCGGCAGGAAGAAGCGTGGTGCCTGCCTTGGGAGGGT 1.174421e-04
+    ## TCTTTTTCGCGAAAGTAGGGCGGTGAACACTTTCCAGAGGC 1.174421e-04
 
 Sorted results with no independent filtering applied
 
@@ -177,3 +179,109 @@ overlapFit(drb)
 ```
 
 ![](DEBRA_markdown_files/figure-markdown_github/unnamed-chunk-9-1.png)
+
+**Advanced DEBRA workflow**
+---------------------------
+
+We start by creating the DEBRADataSet. In this example we will use shrunken dispersion estimates and DESeq2(LRT) test.
+
+``` r
+drb_2=DEBRADataSet( counts =  bar_counts,
+              control_names  = control_names,
+              condition_names = condition_names,
+              method=c("DESeq2(LRT)"),
+              trended=T)
+```
+
+Next, we estimate the beta threshold with default parameter.
+
+``` r
+drb_2= estimateBeta(drb_2)
+```
+
+    ## [1] KS tests completed
+    ## [1] "Overlap estimation completed"
+
+``` r
+KS_plot(drb_2)
+```
+
+![](DEBRA_markdown_files/figure-markdown_github/unnamed-chunk-11-1.png)
+
+``` r
+overlapFit(drb_2)
+```
+
+![](DEBRA_markdown_files/figure-markdown_github/unnamed-chunk-11-2.png)
+
+The estimation was successfull, but what if it is not? Let's change the "s" parameter to 200, so that there is not enough of the data points for a proper fitting of the overlap between theoretical and empirical KS test statistics.
+
+``` r
+drb_2= estimateBeta(drb_2,s = 200)
+```
+
+    ## [1] "found beta value, replacing it"
+    ## [1] KS tests completed
+    ## [1] "Overlap estimation completed"
+    ## [1] "Failed fitting with LL.4() sigmoid; trying G.3() (see drc::drm for details)"
+    ## [1] "Failed to fit mean-KS overlap with sigmoid; run KS_plot(drb) to assess the NB fit quality and manually set beta threshold. Setting beta to default_beta value. "
+
+Let's see the KS test plot
+
+``` r
+KS_plot(drb_2)
+```
+
+![](DEBRA_markdown_files/figure-markdown_github/unnamed-chunk-13-1.png)
+
+Now we can visually assess the mean value at which two KS test statstics start to ovrlap and set the beta value manually.
+
+``` r
+drb_2=DEBRADataSet( counts =  bar_counts,
+              control_names  = control_names,
+              condition_names = condition_names,
+              method=c("DESeq2(LRT)"),
+              trended=T,
+              beta=15)
+```
+
+As we set the beta threshold manually, we can skip estimatBeta() command and run the testDRB() right away followed by independent filtering
+
+``` r
+drb_2=testDRB(drb_2)
+```
+
+    ## converting counts to integer mode
+
+``` r
+drb_2=independentFilteringDRB(drb_2)
+```
+
+Let's now call DRBs using original DESeq2(LRT) and compare these to the DEBRA results
+
+``` r
+require(ggplot2)
+```
+
+    ## Loading required package: ggplot2
+
+``` r
+drb_original=DEBRA(bar_counts, control_names=control_names, condition_names=condition_names, method="DESeq2(LRT)",modified = F)
+```
+
+    ## [1] " no beta value found, using beta = 0 "
+
+``` r
+res_orig=resultsDRB(drb_original)
+res_debra=resultsDRB(drb_2)
+
+
+x=rbind(cbind.data.frame(padj=res_orig$padj,method="DESeq2",baseMean=res_orig$baseMean),
+        cbind.data.frame(padj=res_debra$padj,method="DEBRA",baseMean=res_debra$baseMean))
+
+ggplot(x[x$padj<0.25,], aes(x=log10(baseMean),fill=method))+geom_histogram( position="dodge",bins=10)+theme_minimal()
+```
+
+![](DEBRA_markdown_files/figure-markdown_github/unnamed-chunk-16-1.png)
+
+We observe the large number of DRBs comes from the low count region when assesed with the original DESeq2
