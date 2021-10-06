@@ -6,6 +6,8 @@ Yevhen Akimov
 DEBRA - DESeq-based Barcode Representation Analysis
 ===================================================
 
+IMPORTANT: For R version > 4 use https://github.com/YevhenAkimov/DEBRA_1.01 
+
 DEBRA algorithm is developed for the identification of differentially represented clones (clones that differentially respond to the assay conditions) in clone tracing experiments. The clone tracing experiments are often associated with treatment-induced reduction in sample size which has been shown to affect the statistical properties of barcode read counts. Traditional algorithms (DESeq,DESeq2,edgeR) used for the inference of the differentially represented sequencing tags fail to account for these discrepancies and produce high number of false discoveries when the difference in size between control and condition samples is high. DEBRA utilizes the DESeq/DESeq2 functionality to reliably call differentially represented barcodes (DRBs) in clone tracing experiments.
 
 Start by installing the package
